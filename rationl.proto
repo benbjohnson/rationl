@@ -9,7 +9,24 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 
 message User {
-	required string Email=1;
-	required string Token=2;
+	required int64 ID=1;
+	repeated string InvestigationIDs=2;
+	required string Email=3;
+	required string AccessToken=4;
+}
+
+message Investigation {
+	required string ID=1;
+	required int64 UserID=2;
+	repeated string ExperimentIDs=3;
+	required string Name=4;
+}
+
+message Experiment {
+	required string ID=1;
+	required string InvestigationID=2;
+	required string Outcome=3;
+	required string Hypothesis=4;
+	required string Observation=5;
 }
 

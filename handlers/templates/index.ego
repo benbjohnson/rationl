@@ -1,4 +1,6 @@
-<%! func index(w io.Writer, session *Session) error %>
+<%! func Index(w io.Writer, session *rationl.Session) error %>
+
+<%% import "github.com/benbjohnson/rationl" %%>
 
 <!DOCTYPE html>
 <html lang="en">

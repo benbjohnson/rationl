@@ -10,6 +10,8 @@
 
 	It has these top-level messages:
 		User
+		Investigation
+		Experiment
 */
 package rationl
 
@@ -35,14 +37,30 @@ var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type User struct {
-	Email            *string `protobuf:"bytes,1,req" json:"Email,omitempty"`
-	Token            *string `protobuf:"bytes,2,req" json:"Token,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	ID               *int64   `protobuf:"varint,1,req" json:"ID,omitempty"`
+	InvestigationIDs []string `protobuf:"bytes,2,rep" json:"InvestigationIDs,omitempty"`
+	Email            *string  `protobuf:"bytes,3,req" json:"Email,omitempty"`
+	AccessToken      *string  `protobuf:"bytes,4,req" json:"AccessToken,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
 }
 
 func (m *User) Reset()         { *m = User{} }
 func (m *User) String() string { return proto.CompactTextString(m) }
 func (*User) ProtoMessage()    {}
+
+func (m *User) GetID() int64 {
+	if m != nil && m.ID != nil {
+		return *m.ID
+	}
+	return 0
+}
+
+func (m *User) GetInvestigationIDs() []string {
+	if m != nil {
+		return m.InvestigationIDs
+	}
+	return nil
+}
 
 func (m *User) GetEmail() string {
 	if m != nil && m.Email != nil {
@@ -51,9 +69,97 @@ func (m *User) GetEmail() string {
 	return ""
 }
 
-func (m *User) GetToken() string {
-	if m != nil && m.Token != nil {
-		return *m.Token
+func (m *User) GetAccessToken() string {
+	if m != nil && m.AccessToken != nil {
+		return *m.AccessToken
+	}
+	return ""
+}
+
+type Investigation struct {
+	ID               *string  `protobuf:"bytes,1,req" json:"ID,omitempty"`
+	UserID           *int64   `protobuf:"varint,2,req" json:"UserID,omitempty"`
+	ExperimentIDs    []string `protobuf:"bytes,3,rep" json:"ExperimentIDs,omitempty"`
+	Name             *string  `protobuf:"bytes,4,req" json:"Name,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *Investigation) Reset()         { *m = Investigation{} }
+func (m *Investigation) String() string { return proto.CompactTextString(m) }
+func (*Investigation) ProtoMessage()    {}
+
+func (m *Investigation) GetID() string {
+	if m != nil && m.ID != nil {
+		return *m.ID
+	}
+	return ""
+}
+
+func (m *Investigation) GetUserID() int64 {
+	if m != nil && m.UserID != nil {
+		return *m.UserID
+	}
+	return 0
+}
+
+func (m *Investigation) GetExperimentIDs() []string {
+	if m != nil {
+		return m.ExperimentIDs
+	}
+	return nil
+}
+
+func (m *Investigation) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+type Experiment struct {
+	ID               *string `protobuf:"bytes,1,req" json:"ID,omitempty"`
+	InvestigationID  *string `protobuf:"bytes,2,req" json:"InvestigationID,omitempty"`
+	Outcome          *string `protobuf:"bytes,3,req" json:"Outcome,omitempty"`
+	Hypothesis       *string `protobuf:"bytes,4,req" json:"Hypothesis,omitempty"`
+	Observation      *string `protobuf:"bytes,5,req" json:"Observation,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *Experiment) Reset()         { *m = Experiment{} }
+func (m *Experiment) String() string { return proto.CompactTextString(m) }
+func (*Experiment) ProtoMessage()    {}
+
+func (m *Experiment) GetID() string {
+	if m != nil && m.ID != nil {
+		return *m.ID
+	}
+	return ""
+}
+
+func (m *Experiment) GetInvestigationID() string {
+	if m != nil && m.InvestigationID != nil {
+		return *m.InvestigationID
+	}
+	return ""
+}
+
+func (m *Experiment) GetOutcome() string {
+	if m != nil && m.Outcome != nil {
+		return *m.Outcome
+	}
+	return ""
+}
+
+func (m *Experiment) GetHypothesis() string {
+	if m != nil && m.Hypothesis != nil {
+		return *m.Hypothesis
+	}
+	return ""
+}
+
+func (m *Experiment) GetObservation() string {
+	if m != nil && m.Observation != nil {
+		return *m.Observation
 	}
 	return ""
 }
@@ -61,6 +167,133 @@ func (m *User) GetToken() string {
 func init() {
 }
 func (m *User) Unmarshal(data []byte) error {
+	l := len(data)
+	index := 0
+	for index < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if index >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[index]
+			index++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				v |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.ID = &v
+		case 2:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.InvestigationIDs = append(m.InvestigationIDs, string(data[index:postIndex]))
+			index = postIndex
+		case 3:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.Email = &s
+			index = postIndex
+		case 4:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.AccessToken = &s
+			index = postIndex
+		default:
+			var sizeOfWire int
+			for {
+				sizeOfWire++
+				wire >>= 7
+				if wire == 0 {
+					break
+				}
+			}
+			index -= sizeOfWire
+			skippy, err := code_google_com_p_gogoprotobuf_proto.Skip(data[index:])
+			if err != nil {
+				return err
+			}
+			if (index + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[index:index+skippy]...)
+			index += skippy
+		}
+	}
+	return nil
+}
+func (m *Investigation) Unmarshal(data []byte) error {
 	l := len(data)
 	index := 0
 	for index < l {
@@ -100,7 +333,134 @@ func (m *User) Unmarshal(data []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			s := string(data[index:postIndex])
-			m.Email = &s
+			m.ID = &s
+			index = postIndex
+		case 2:
+			if wireType != 0 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				v |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.UserID = &v
+		case 3:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ExperimentIDs = append(m.ExperimentIDs, string(data[index:postIndex]))
+			index = postIndex
+		case 4:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.Name = &s
+			index = postIndex
+		default:
+			var sizeOfWire int
+			for {
+				sizeOfWire++
+				wire >>= 7
+				if wire == 0 {
+					break
+				}
+			}
+			index -= sizeOfWire
+			skippy, err := code_google_com_p_gogoprotobuf_proto.Skip(data[index:])
+			if err != nil {
+				return err
+			}
+			if (index + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[index:index+skippy]...)
+			index += skippy
+		}
+	}
+	return nil
+}
+func (m *Experiment) Unmarshal(data []byte) error {
+	l := len(data)
+	index := 0
+	for index < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if index >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[index]
+			index++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.ID = &s
 			index = postIndex
 		case 2:
 			if wireType != 2 {
@@ -123,7 +483,76 @@ func (m *User) Unmarshal(data []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			s := string(data[index:postIndex])
-			m.Token = &s
+			m.InvestigationID = &s
+			index = postIndex
+		case 3:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.Outcome = &s
+			index = postIndex
+		case 4:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.Hypothesis = &s
+			index = postIndex
+		case 5:
+			if wireType != 2 {
+				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			postIndex := index + int(stringLen)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[index:postIndex])
+			m.Observation = &s
 			index = postIndex
 		default:
 			var sizeOfWire int
@@ -151,12 +580,74 @@ func (m *User) Unmarshal(data []byte) error {
 func (m *User) Size() (n int) {
 	var l int
 	_ = l
+	if m.ID != nil {
+		n += 1 + sovRationl(uint64(*m.ID))
+	}
+	if len(m.InvestigationIDs) > 0 {
+		for _, s := range m.InvestigationIDs {
+			l = len(s)
+			n += 1 + l + sovRationl(uint64(l))
+		}
+	}
 	if m.Email != nil {
 		l = len(*m.Email)
 		n += 1 + l + sovRationl(uint64(l))
 	}
-	if m.Token != nil {
-		l = len(*m.Token)
+	if m.AccessToken != nil {
+		l = len(*m.AccessToken)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+func (m *Investigation) Size() (n int) {
+	var l int
+	_ = l
+	if m.ID != nil {
+		l = len(*m.ID)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.UserID != nil {
+		n += 1 + sovRationl(uint64(*m.UserID))
+	}
+	if len(m.ExperimentIDs) > 0 {
+		for _, s := range m.ExperimentIDs {
+			l = len(s)
+			n += 1 + l + sovRationl(uint64(l))
+		}
+	}
+	if m.Name != nil {
+		l = len(*m.Name)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+func (m *Experiment) Size() (n int) {
+	var l int
+	_ = l
+	if m.ID != nil {
+		l = len(*m.ID)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.InvestigationID != nil {
+		l = len(*m.InvestigationID)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.Outcome != nil {
+		l = len(*m.Outcome)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.Hypothesis != nil {
+		l = len(*m.Hypothesis)
+		n += 1 + l + sovRationl(uint64(l))
+	}
+	if m.Observation != nil {
+		l = len(*m.Observation)
 		n += 1 + l + sovRationl(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -194,17 +685,139 @@ func (m *User) MarshalTo(data []byte) (n int, err error) {
 	_ = i
 	var l int
 	_ = l
+	if m.ID != nil {
+		data[i] = 0x8
+		i++
+		i = encodeVarintRationl(data, i, uint64(*m.ID))
+	}
+	if len(m.InvestigationIDs) > 0 {
+		for _, s := range m.InvestigationIDs {
+			data[i] = 0x12
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
 	if m.Email != nil {
-		data[i] = 0xa
+		data[i] = 0x1a
 		i++
 		i = encodeVarintRationl(data, i, uint64(len(*m.Email)))
 		i += copy(data[i:], *m.Email)
 	}
-	if m.Token != nil {
+	if m.AccessToken != nil {
+		data[i] = 0x22
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.AccessToken)))
+		i += copy(data[i:], *m.AccessToken)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+func (m *Investigation) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *Investigation) MarshalTo(data []byte) (n int, err error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ID != nil {
+		data[i] = 0xa
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.ID)))
+		i += copy(data[i:], *m.ID)
+	}
+	if m.UserID != nil {
+		data[i] = 0x10
+		i++
+		i = encodeVarintRationl(data, i, uint64(*m.UserID))
+	}
+	if len(m.ExperimentIDs) > 0 {
+		for _, s := range m.ExperimentIDs {
+			data[i] = 0x1a
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if m.Name != nil {
+		data[i] = 0x22
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.Name)))
+		i += copy(data[i:], *m.Name)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+func (m *Experiment) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *Experiment) MarshalTo(data []byte) (n int, err error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ID != nil {
+		data[i] = 0xa
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.ID)))
+		i += copy(data[i:], *m.ID)
+	}
+	if m.InvestigationID != nil {
 		data[i] = 0x12
 		i++
-		i = encodeVarintRationl(data, i, uint64(len(*m.Token)))
-		i += copy(data[i:], *m.Token)
+		i = encodeVarintRationl(data, i, uint64(len(*m.InvestigationID)))
+		i += copy(data[i:], *m.InvestigationID)
+	}
+	if m.Outcome != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.Outcome)))
+		i += copy(data[i:], *m.Outcome)
+	}
+	if m.Hypothesis != nil {
+		data[i] = 0x22
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.Hypothesis)))
+		i += copy(data[i:], *m.Hypothesis)
+	}
+	if m.Observation != nil {
+		data[i] = 0x2a
+		i++
+		i = encodeVarintRationl(data, i, uint64(len(*m.Observation)))
+		i += copy(data[i:], *m.Observation)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(data[i:], m.XXX_unrecognized)
@@ -242,7 +855,21 @@ func (this *User) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&rationl.User{` + `Email:` + valueToGoStringRationl(this.Email, "string"), `Token:` + valueToGoStringRationl(this.Token, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
+	s := strings.Join([]string{`&rationl.User{` + `ID:` + valueToGoStringRationl(this.ID, "int64"), `InvestigationIDs:` + fmt.Sprintf("%#v", this.InvestigationIDs), `Email:` + valueToGoStringRationl(this.Email, "string"), `AccessToken:` + valueToGoStringRationl(this.AccessToken, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
+	return s
+}
+func (this *Investigation) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&rationl.Investigation{` + `ID:` + valueToGoStringRationl(this.ID, "string"), `UserID:` + valueToGoStringRationl(this.UserID, "int64"), `ExperimentIDs:` + fmt.Sprintf("%#v", this.ExperimentIDs), `Name:` + valueToGoStringRationl(this.Name, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
+	return s
+}
+func (this *Experiment) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&rationl.Experiment{` + `ID:` + valueToGoStringRationl(this.ID, "string"), `InvestigationID:` + valueToGoStringRationl(this.InvestigationID, "string"), `Outcome:` + valueToGoStringRationl(this.Outcome, "string"), `Hypothesis:` + valueToGoStringRationl(this.Hypothesis, "string"), `Observation:` + valueToGoStringRationl(this.Observation, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
 	return s
 }
 func valueToGoStringRationl(v interface{}, typ string) string {

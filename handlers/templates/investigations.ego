@@ -1,0 +1,54 @@
+<%! func Investigations(w io.Writer, session *rationl.Session, investigations []*rationl.Investigation) error %>
+
+<%% import "github.com/benbjohnson/rationl" %%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <% head(w) %>
+
+  <body class="investigations">
+    <div class="container">
+      <div class="page-header">
+        <h3>Investigations</h3>
+      </div>
+
+      <% if len(investigations) == 0 { %>
+        <div class="row">
+          <div class="col-lg-12">
+            <p>
+              Rationl groups your experiments together based on what you're trying
+              to investigate. For example, if you're trying to figure out why your
+              application is running slow, you might have many experiments you 
+              want to try but they're all related to your application performance.
+            </p>
+          </div>
+        </div>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for _, investigation := range investigations { %>
+              <tr>
+                <td>
+                  <%= investigation.GetName() %>
+                </td>
+                <td>Jan 01, 2014</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      <% } %>
+
+      <div class="row">
+        <div class="col-md-12">
+          <a type="button" class="btn btn-primary" href="/investigations/new">New Investigation</a>
+        </div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>

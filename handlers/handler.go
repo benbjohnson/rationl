@@ -1,29 +1,40 @@
-package rationl
+package handlers
 
 import (
 	"net/http"
 	"path"
 
+	"github.com/benbjohnson/rationl"
 	"github.com/benbjohnson/rationl/assets"
+	"github.com/benbjohnson/rationl/handlers/templates"
 	"github.com/gorilla/mux"
 )
 
+const authorizeUrl = "/authorize"
+
 // NewHandler returns a new root HTTP handler.
-func NewHandler(db *DB) http.Handler {
+func NewHandler(db *rationl.DB, clientID, secret string) http.Handler {
+	var authorizeHandler = newAuthorizeHandler(db, clientID, secret)
+
 	r := mux.NewRouter()
 	r.Handle("/", &indexHandler{db})
 	r.HandleFunc("/assets/{filename}", assetsHandleFunc)
+
+	r.Handle("/authorize", authorizeHandler)
+	r.Handle("/authorize/callback", authorizeHandler)
+
+	r.Handle("/investigations", &investigationsHandler{db})
 	return r
 }
 
 // indexHandler handles the rendering of the home page.
 type indexHandler struct {
-	db *DB
+	db *rationl.DB
 }
 
 func (h *indexHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.db.View(func(tx *Tx) error {
-		return index(w, tx.Session(r))
+	h.db.View(func(tx *rationl.Tx) error {
+		return templates.Index(w, tx.Session(r))
 	})
 }
 

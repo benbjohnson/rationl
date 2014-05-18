@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/benbjohnson/rationl"
+	"github.com/benbjohnson/rationl/handlers"
 )
 
 func main() {
@@ -45,7 +46,7 @@ func main() {
 	log.SetFlags(log.LstdFlags)
 
 	// Setup the HTTP handlers.
-	http.Handle("/", rationl.NewHandler(db))
+	http.Handle("/", handlers.NewHandler(db, *clientID, *secret))
 
 	// Start the HTTP server.
 	go func() { http.ListenAndServe(*addr, nil) }()
