@@ -10,7 +10,6 @@ option (gogoproto.unmarshaler_all) = true;
 
 message User {
 	required int64 ID=1;
-	repeated string InvestigationIDs=2;
 	required string Email=3;
 	required string AccessToken=4;
 }
@@ -18,7 +17,6 @@ message User {
 message Investigation {
 	required string ID=1;
 	required int64 UserID=2;
-	repeated string ExperimentIDs=3;
 	required string Name=4;
 }
 

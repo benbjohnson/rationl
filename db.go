@@ -8,10 +8,12 @@ import (
 	"os"
 
 	"code.google.com/p/goauth2/oauth"
+	"code.google.com/p/gogoprotobuf/proto"
 	"github.com/boltdb/bolt"
 	"github.com/google/go-github/github"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/nu7hatch/gouuid"
 )
 
 // DB represents the primary data storage.
@@ -33,7 +35,9 @@ func Open(path string, mode os.FileMode) (*DB, error) {
 	err = db.Update(func(tx *Tx) error {
 		var meta, _ = tx.CreateBucketIfNotExists([]byte("Meta"))
 		tx.CreateBucketIfNotExists([]byte("User"))
+		tx.CreateBucketIfNotExists([]byte("User.[]Investigation"))
 		tx.CreateBucketIfNotExists([]byte("Investigation"))
+		tx.CreateBucketIfNotExists([]byte("Investigation.[]Experiment"))
 		tx.CreateBucketIfNotExists([]byte("Experiment"))
 
 		// Initialize secure cookie store.
@@ -111,7 +115,7 @@ func (tx *Tx) SaveUser(u *User) error {
 	if err != nil {
 		return fmt.Errorf("marshal: %s", err)
 	}
-	return tx.userBucket().Put(i64tob(*u.ID), b)
+	return tx.userBucket().Put(i64tob(u.GetID()), b)
 }
 
 // FindOrCreateUserByAccessToken retrieves or creates a new user based on an
@@ -155,6 +159,49 @@ func (tx *Tx) Investigation(id string) *Investigation {
 	return &i
 }
 
+// InvestigationsByUserID retrieves a list of investigations by user id.
+func (tx *Tx) InvestigationsByUserID(id int64) []*Investigation {
+	b := tx.Bucket([]byte("User.[]Investigation")).Bucket(i64tob(id))
+	if b == nil {
+		return nil
+	}
+	var a []*Investigation
+	b.ForEach(func(k, _ []byte) error {
+		a = append(a, tx.Investigation(string(k)))
+		return nil
+	})
+	return a
+}
+
+// CreateInvestigation creates a new investigation.
+func (tx *Tx) CreateInvestigation(i *Investigation) error {
+	if tx.User(i.GetUserID()) == nil {
+		return fmt.Errorf("invalid user: %d", i.GetUserID())
+	} else if i.GetName() == "" {
+		return fmt.Errorf("name required")
+	}
+
+	// Create a UUID.
+	id, err := uuid.NewV4()
+	if err != nil {
+		return err
+	}
+	i.ID = proto.String(id.String())
+
+	// Save investigation
+	b, err := i.Marshal()
+	if err != nil {
+		return fmt.Errorf("marshal: %s", err)
+	}
+	if err := tx.investigationBucket().Put([]byte(i.GetID()), b); err != nil {
+		return fmt.Errorf("put: %s", err)
+	}
+
+	// TODO(benbjohnson): Add to index.
+
+	return nil
+}
+
 // Parses a session for a given HTTP request.
 func (tx *Tx) Session(r *http.Request) *Session {
 	var s = &Session{}
@@ -168,7 +215,13 @@ func (tx *Tx) Session(r *http.Request) *Session {
 // Session represents an authenticated session.
 type Session struct {
 	*sessions.Session
-	User *User
+	User  *User
+	Error error
+}
+
+// Authenticated returns true if there is a user attached to the session.
+func (s *Session) Authenticated() bool {
+	return s.User != nil
 }
 
 // Converts an integer to a big-endian encoded byte slice.

@@ -37,11 +37,10 @@ var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type User struct {
-	ID               *int64   `protobuf:"varint,1,req" json:"ID,omitempty"`
-	InvestigationIDs []string `protobuf:"bytes,2,rep" json:"InvestigationIDs,omitempty"`
-	Email            *string  `protobuf:"bytes,3,req" json:"Email,omitempty"`
-	AccessToken      *string  `protobuf:"bytes,4,req" json:"AccessToken,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	ID               *int64  `protobuf:"varint,1,req" json:"ID,omitempty"`
+	Email            *string `protobuf:"bytes,3,req" json:"Email,omitempty"`
+	AccessToken      *string `protobuf:"bytes,4,req" json:"AccessToken,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *User) Reset()         { *m = User{} }
@@ -53,13 +52,6 @@ func (m *User) GetID() int64 {
 		return *m.ID
 	}
 	return 0
-}
-
-func (m *User) GetInvestigationIDs() []string {
-	if m != nil {
-		return m.InvestigationIDs
-	}
-	return nil
 }
 
 func (m *User) GetEmail() string {
@@ -77,11 +69,10 @@ func (m *User) GetAccessToken() string {
 }
 
 type Investigation struct {
-	ID               *string  `protobuf:"bytes,1,req" json:"ID,omitempty"`
-	UserID           *int64   `protobuf:"varint,2,req" json:"UserID,omitempty"`
-	ExperimentIDs    []string `protobuf:"bytes,3,rep" json:"ExperimentIDs,omitempty"`
-	Name             *string  `protobuf:"bytes,4,req" json:"Name,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	ID               *string `protobuf:"bytes,1,req" json:"ID,omitempty"`
+	UserID           *int64  `protobuf:"varint,2,req" json:"UserID,omitempty"`
+	Name             *string `protobuf:"bytes,4,req" json:"Name,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *Investigation) Reset()         { *m = Investigation{} }
@@ -100,13 +91,6 @@ func (m *Investigation) GetUserID() int64 {
 		return *m.UserID
 	}
 	return 0
-}
-
-func (m *Investigation) GetExperimentIDs() []string {
-	if m != nil {
-		return m.ExperimentIDs
-	}
-	return nil
 }
 
 func (m *Investigation) GetName() string {
@@ -202,28 +186,6 @@ func (m *User) Unmarshal(data []byte) error {
 				}
 			}
 			m.ID = &v
-		case 2:
-			if wireType != 2 {
-				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if index >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[index]
-				index++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			postIndex := index + int(stringLen)
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.InvestigationIDs = append(m.InvestigationIDs, string(data[index:postIndex]))
-			index = postIndex
 		case 3:
 			if wireType != 2 {
 				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
@@ -352,28 +314,6 @@ func (m *Investigation) Unmarshal(data []byte) error {
 				}
 			}
 			m.UserID = &v
-		case 3:
-			if wireType != 2 {
-				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if index >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[index]
-				index++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			postIndex := index + int(stringLen)
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ExperimentIDs = append(m.ExperimentIDs, string(data[index:postIndex]))
-			index = postIndex
 		case 4:
 			if wireType != 2 {
 				return code_google_com_p_gogoprotobuf_proto.ErrWrongType
@@ -583,12 +523,6 @@ func (m *User) Size() (n int) {
 	if m.ID != nil {
 		n += 1 + sovRationl(uint64(*m.ID))
 	}
-	if len(m.InvestigationIDs) > 0 {
-		for _, s := range m.InvestigationIDs {
-			l = len(s)
-			n += 1 + l + sovRationl(uint64(l))
-		}
-	}
 	if m.Email != nil {
 		l = len(*m.Email)
 		n += 1 + l + sovRationl(uint64(l))
@@ -611,12 +545,6 @@ func (m *Investigation) Size() (n int) {
 	}
 	if m.UserID != nil {
 		n += 1 + sovRationl(uint64(*m.UserID))
-	}
-	if len(m.ExperimentIDs) > 0 {
-		for _, s := range m.ExperimentIDs {
-			l = len(s)
-			n += 1 + l + sovRationl(uint64(l))
-		}
 	}
 	if m.Name != nil {
 		l = len(*m.Name)
@@ -690,21 +618,6 @@ func (m *User) MarshalTo(data []byte) (n int, err error) {
 		i++
 		i = encodeVarintRationl(data, i, uint64(*m.ID))
 	}
-	if len(m.InvestigationIDs) > 0 {
-		for _, s := range m.InvestigationIDs {
-			data[i] = 0x12
-			i++
-			l = len(s)
-			for l >= 1<<7 {
-				data[i] = uint8(uint64(l)&0x7f | 0x80)
-				l >>= 7
-				i++
-			}
-			data[i] = uint8(l)
-			i++
-			i += copy(data[i:], s)
-		}
-	}
 	if m.Email != nil {
 		data[i] = 0x1a
 		i++
@@ -747,21 +660,6 @@ func (m *Investigation) MarshalTo(data []byte) (n int, err error) {
 		data[i] = 0x10
 		i++
 		i = encodeVarintRationl(data, i, uint64(*m.UserID))
-	}
-	if len(m.ExperimentIDs) > 0 {
-		for _, s := range m.ExperimentIDs {
-			data[i] = 0x1a
-			i++
-			l = len(s)
-			for l >= 1<<7 {
-				data[i] = uint8(uint64(l)&0x7f | 0x80)
-				l >>= 7
-				i++
-			}
-			data[i] = uint8(l)
-			i++
-			i += copy(data[i:], s)
-		}
 	}
 	if m.Name != nil {
 		data[i] = 0x22
@@ -855,14 +753,14 @@ func (this *User) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&rationl.User{` + `ID:` + valueToGoStringRationl(this.ID, "int64"), `InvestigationIDs:` + fmt.Sprintf("%#v", this.InvestigationIDs), `Email:` + valueToGoStringRationl(this.Email, "string"), `AccessToken:` + valueToGoStringRationl(this.AccessToken, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
+	s := strings.Join([]string{`&rationl.User{` + `ID:` + valueToGoStringRationl(this.ID, "int64"), `Email:` + valueToGoStringRationl(this.Email, "string"), `AccessToken:` + valueToGoStringRationl(this.AccessToken, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
 	return s
 }
 func (this *Investigation) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&rationl.Investigation{` + `ID:` + valueToGoStringRationl(this.ID, "string"), `UserID:` + valueToGoStringRationl(this.UserID, "int64"), `ExperimentIDs:` + fmt.Sprintf("%#v", this.ExperimentIDs), `Name:` + valueToGoStringRationl(this.Name, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
+	s := strings.Join([]string{`&rationl.Investigation{` + `ID:` + valueToGoStringRationl(this.ID, "string"), `UserID:` + valueToGoStringRationl(this.UserID, "int64"), `Name:` + valueToGoStringRationl(this.Name, "string"), `XXX_unrecognized:` + fmt.Sprintf("%#v", this.XXX_unrecognized) + `}`}, ", ")
 	return s
 }
 func (this *Experiment) GoString() string {

@@ -1,0 +1,23 @@
+<%! func EditInvestigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error %>
+
+<%% import "github.com/benbjohnson/rationl" %%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <% head(w) %>
+
+  <body class="investigations">
+    <div class="container">
+      <div class="page-header">
+        <h3>Edit Investigation</h3>
+      </div>
+
+      <form role="form" action="/investigations/<%= i.GetID() %>" method="PATCH">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" value="<%= i.GetName() %>"/>
+        </div>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>

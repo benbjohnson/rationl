@@ -6,6 +6,208 @@ import (
 	"io"
 )
 
+//line edit_investigation.ego:1
+func EditInvestigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error {
+//line edit_investigation.ego:2
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:4
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:5
+	if _, err := fmt.Fprintf(w, "<!DOCTYPE html>\n"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:6
+	if _, err := fmt.Fprintf(w, "<html lang=\"en\">\n  "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:7
+	head(w)
+//line edit_investigation.ego:8
+	if _, err := fmt.Fprintf(w, "\n\n  "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:9
+	if _, err := fmt.Fprintf(w, "<body class=\"investigations\">\n    "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:10
+	if _, err := fmt.Fprintf(w, "<div class=\"container\">\n      "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:11
+	if _, err := fmt.Fprintf(w, "<div class=\"page-header\">\n        "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:12
+	if _, err := fmt.Fprintf(w, "<h3>Edit Investigation"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:12
+	if _, err := fmt.Fprintf(w, "</h3>\n      "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:13
+	if _, err := fmt.Fprintf(w, "</div>\n\n      "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:15
+	if _, err := fmt.Fprintf(w, "<form role=\"form\" action=\"/investigations/"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:15
+	if _, err := fmt.Fprintf(w, "%v", i.GetID()); err != nil {
+		return err
+	}
+//line edit_investigation.ego:15
+	if _, err := fmt.Fprintf(w, "\" method=\"PATCH\">\n        "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:16
+	if _, err := fmt.Fprintf(w, "<div class=\"form-group\">\n          "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:17
+	if _, err := fmt.Fprintf(w, "<label for=\"name\">Name"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:17
+	if _, err := fmt.Fprintf(w, "</label>\n          "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "<input type=\"text\" class=\"form-control\" id=\"name\" value=\""); err != nil {
+		return err
+	}
+//line edit_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "%v", i.GetName()); err != nil {
+		return err
+	}
+//line edit_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "\"/>\n        "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:19
+	if _, err := fmt.Fprintf(w, "</div>\n      "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:20
+	if _, err := fmt.Fprintf(w, "</form>\n    "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:21
+	if _, err := fmt.Fprintf(w, "</div> "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:21
+	if _, err := fmt.Fprintf(w, "<!-- /container -->\n  "); err != nil {
+		return err
+	}
+//line edit_investigation.ego:22
+	if _, err := fmt.Fprintf(w, "</body>\n"); err != nil {
+		return err
+	}
+//line edit_investigation.ego:23
+	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+//line error.ego:1
+func Error(w io.Writer, err error) error {
+//line error.ego:2
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line error.ego:3
+	if _, err := fmt.Fprintf(w, "<!DOCTYPE html>\n"); err != nil {
+		return err
+	}
+//line error.ego:4
+	if _, err := fmt.Fprintf(w, "<html lang=\"en\">\n  "); err != nil {
+		return err
+	}
+//line error.ego:5
+	head(w)
+//line error.ego:6
+	if _, err := fmt.Fprintf(w, "\n\n  "); err != nil {
+		return err
+	}
+//line error.ego:7
+	if _, err := fmt.Fprintf(w, "<body class=\"investigations\">\n    "); err != nil {
+		return err
+	}
+//line error.ego:8
+	if _, err := fmt.Fprintf(w, "<div class=\"container\">\n      "); err != nil {
+		return err
+	}
+//line error.ego:9
+	if _, err := fmt.Fprintf(w, "<div class=\"page-header\">\n        "); err != nil {
+		return err
+	}
+//line error.ego:10
+	if _, err := fmt.Fprintf(w, "<h3>An error has occurred"); err != nil {
+		return err
+	}
+//line error.ego:10
+	if _, err := fmt.Fprintf(w, "</h3>\n      "); err != nil {
+		return err
+	}
+//line error.ego:11
+	if _, err := fmt.Fprintf(w, "</div>\n\n      "); err != nil {
+		return err
+	}
+//line error.ego:13
+	if _, err := fmt.Fprintf(w, "<div class=\"row\">\n        "); err != nil {
+		return err
+	}
+//line error.ego:14
+	if _, err := fmt.Fprintf(w, "<div class=\"col-lg-12\">\n          "); err != nil {
+		return err
+	}
+//line error.ego:15
+	if _, err := fmt.Fprintf(w, "<p>"); err != nil {
+		return err
+	}
+//line error.ego:15
+	if _, err := fmt.Fprintf(w, "%v", err.Error()); err != nil {
+		return err
+	}
+//line error.ego:15
+	if _, err := fmt.Fprintf(w, "</p>\n        "); err != nil {
+		return err
+	}
+//line error.ego:16
+	if _, err := fmt.Fprintf(w, "</div>\n      "); err != nil {
+		return err
+	}
+//line error.ego:17
+	if _, err := fmt.Fprintf(w, "</div>\n    "); err != nil {
+		return err
+	}
+//line error.ego:18
+	if _, err := fmt.Fprintf(w, "</div> "); err != nil {
+		return err
+	}
+//line error.ego:18
+	if _, err := fmt.Fprintf(w, "<!-- /container -->\n  "); err != nil {
+		return err
+	}
+//line error.ego:19
+	if _, err := fmt.Fprintf(w, "</body>\n"); err != nil {
+		return err
+	}
+//line error.ego:20
+	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
 //line head.ego:1
 func head(w io.Writer) error {
 //line head.ego:2
@@ -168,6 +370,151 @@ func Index(w io.Writer, session *rationl.Session) error {
 		return err
 	}
 //line index.ego:27
+	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+//line investigation.ego:1
+func Investigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error {
+//line investigation.ego:2
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line investigation.ego:4
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line investigation.ego:5
+	if _, err := fmt.Fprintf(w, "<!DOCTYPE html>\n"); err != nil {
+		return err
+	}
+//line investigation.ego:6
+	if _, err := fmt.Fprintf(w, "<html lang=\"en\">\n  "); err != nil {
+		return err
+	}
+//line investigation.ego:7
+	head(w)
+//line investigation.ego:8
+	if _, err := fmt.Fprintf(w, "\n\n  "); err != nil {
+		return err
+	}
+//line investigation.ego:9
+	if _, err := fmt.Fprintf(w, "<body class=\"investigations\">\n    "); err != nil {
+		return err
+	}
+//line investigation.ego:10
+	if _, err := fmt.Fprintf(w, "<div class=\"container\">\n      "); err != nil {
+		return err
+	}
+//line investigation.ego:11
+	if _, err := fmt.Fprintf(w, "<div class=\"page-header\">\n        "); err != nil {
+		return err
+	}
+//line investigation.ego:12
+	if _, err := fmt.Fprintf(w, "<h3>Investigation"); err != nil {
+		return err
+	}
+//line investigation.ego:12
+	if _, err := fmt.Fprintf(w, "</h3>\n      "); err != nil {
+		return err
+	}
+//line investigation.ego:13
+	if _, err := fmt.Fprintf(w, "</div>\n\n      "); err != nil {
+		return err
+	}
+//line investigation.ego:15
+	if i == nil {
+//line investigation.ego:16
+		if _, err := fmt.Fprintf(w, "\n        "); err != nil {
+			return err
+		}
+//line investigation.ego:16
+		if _, err := fmt.Fprintf(w, "<div class=\"row\">\n          "); err != nil {
+			return err
+		}
+//line investigation.ego:17
+		if _, err := fmt.Fprintf(w, "<div class=\"col-lg-12\">\n            "); err != nil {
+			return err
+		}
+//line investigation.ego:18
+		if _, err := fmt.Fprintf(w, "<p>\n              Investigation could not be found.\n            "); err != nil {
+			return err
+		}
+//line investigation.ego:20
+		if _, err := fmt.Fprintf(w, "</p>\n          "); err != nil {
+			return err
+		}
+//line investigation.ego:21
+		if _, err := fmt.Fprintf(w, "</div>\n        "); err != nil {
+			return err
+		}
+//line investigation.ego:22
+		if _, err := fmt.Fprintf(w, "</div>\n      "); err != nil {
+			return err
+		}
+//line investigation.ego:23
+	} else {
+//line investigation.ego:24
+		if _, err := fmt.Fprintf(w, "\n        "); err != nil {
+			return err
+		}
+//line investigation.ego:24
+		if _, err := fmt.Fprintf(w, "<form role=\"form\">\n          "); err != nil {
+			return err
+		}
+//line investigation.ego:25
+		if _, err := fmt.Fprintf(w, "<div class=\"form-group\">\n            "); err != nil {
+			return err
+		}
+//line investigation.ego:26
+		if _, err := fmt.Fprintf(w, "<label for=\"name\">Name"); err != nil {
+			return err
+		}
+//line investigation.ego:26
+		if _, err := fmt.Fprintf(w, "</label>\n            "); err != nil {
+			return err
+		}
+//line investigation.ego:27
+		if _, err := fmt.Fprintf(w, "<label for=\"name\">"); err != nil {
+			return err
+		}
+//line investigation.ego:27
+		if _, err := fmt.Fprintf(w, "%v", i.GetName()); err != nil {
+			return err
+		}
+//line investigation.ego:27
+		if _, err := fmt.Fprintf(w, "</label>\n          "); err != nil {
+			return err
+		}
+//line investigation.ego:28
+		if _, err := fmt.Fprintf(w, "</div>\n        "); err != nil {
+			return err
+		}
+//line investigation.ego:29
+		if _, err := fmt.Fprintf(w, "</form>\n      "); err != nil {
+			return err
+		}
+//line investigation.ego:30
+	}
+//line investigation.ego:31
+	if _, err := fmt.Fprintf(w, "\n    "); err != nil {
+		return err
+	}
+//line investigation.ego:31
+	if _, err := fmt.Fprintf(w, "</div> "); err != nil {
+		return err
+	}
+//line investigation.ego:31
+	if _, err := fmt.Fprintf(w, "<!-- /container -->\n  "); err != nil {
+		return err
+	}
+//line investigation.ego:32
+	if _, err := fmt.Fprintf(w, "</body>\n"); err != nil {
+		return err
+	}
+//line investigation.ego:33
 	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
 		return err
 	}
@@ -393,6 +740,125 @@ func Investigations(w io.Writer, session *rationl.Session, investigations []*rat
 		return err
 	}
 //line investigations.ego:54
+	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+//line new_investigation.ego:1
+func NewInvestigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error {
+//line new_investigation.ego:2
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line new_investigation.ego:4
+	if _, err := fmt.Fprintf(w, "\n\n"); err != nil {
+		return err
+	}
+//line new_investigation.ego:5
+	if _, err := fmt.Fprintf(w, "<!DOCTYPE html>\n"); err != nil {
+		return err
+	}
+//line new_investigation.ego:6
+	if _, err := fmt.Fprintf(w, "<html lang=\"en\">\n  "); err != nil {
+		return err
+	}
+//line new_investigation.ego:7
+	head(w)
+//line new_investigation.ego:8
+	if _, err := fmt.Fprintf(w, "\n\n  "); err != nil {
+		return err
+	}
+//line new_investigation.ego:9
+	if _, err := fmt.Fprintf(w, "<body class=\"investigations\">\n    "); err != nil {
+		return err
+	}
+//line new_investigation.ego:10
+	if _, err := fmt.Fprintf(w, "<div class=\"container\">\n      "); err != nil {
+		return err
+	}
+//line new_investigation.ego:11
+	if _, err := fmt.Fprintf(w, "<div class=\"page-header\">\n        "); err != nil {
+		return err
+	}
+//line new_investigation.ego:12
+	if _, err := fmt.Fprintf(w, "<h3>New Investigation"); err != nil {
+		return err
+	}
+//line new_investigation.ego:12
+	if _, err := fmt.Fprintf(w, "</h3>\n      "); err != nil {
+		return err
+	}
+//line new_investigation.ego:13
+	if _, err := fmt.Fprintf(w, "</div>\n\n      "); err != nil {
+		return err
+	}
+//line new_investigation.ego:15
+	if _, err := fmt.Fprintf(w, "<form role=\"form\" action=\"/investigations\" method=\"POST\">\n        "); err != nil {
+		return err
+	}
+//line new_investigation.ego:16
+	if _, err := fmt.Fprintf(w, "<div class=\"form-group\">\n          "); err != nil {
+		return err
+	}
+//line new_investigation.ego:17
+	if _, err := fmt.Fprintf(w, "<label for=\"name\">Name"); err != nil {
+		return err
+	}
+//line new_investigation.ego:17
+	if _, err := fmt.Fprintf(w, "</label>\n          "); err != nil {
+		return err
+	}
+//line new_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "<input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" autofocus value=\""); err != nil {
+		return err
+	}
+//line new_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "%v", i.GetName()); err != nil {
+		return err
+	}
+//line new_investigation.ego:18
+	if _, err := fmt.Fprintf(w, "\"/>\n        "); err != nil {
+		return err
+	}
+//line new_investigation.ego:19
+	if _, err := fmt.Fprintf(w, "</div>\n        "); err != nil {
+		return err
+	}
+//line new_investigation.ego:20
+	if _, err := fmt.Fprintf(w, "<button type=\"submit\" class=\"btn btn-primary\">Create Investigation"); err != nil {
+		return err
+	}
+//line new_investigation.ego:20
+	if _, err := fmt.Fprintf(w, "</button>\n        "); err != nil {
+		return err
+	}
+//line new_investigation.ego:21
+	if _, err := fmt.Fprintf(w, "<a class=\"btn btn-default\" href=\"/investigations\">Cancel"); err != nil {
+		return err
+	}
+//line new_investigation.ego:21
+	if _, err := fmt.Fprintf(w, "</a>\n      "); err != nil {
+		return err
+	}
+//line new_investigation.ego:22
+	if _, err := fmt.Fprintf(w, "</form>\n    "); err != nil {
+		return err
+	}
+//line new_investigation.ego:23
+	if _, err := fmt.Fprintf(w, "</div> "); err != nil {
+		return err
+	}
+//line new_investigation.ego:23
+	if _, err := fmt.Fprintf(w, "<!-- /container -->\n  "); err != nil {
+		return err
+	}
+//line new_investigation.ego:24
+	if _, err := fmt.Fprintf(w, "</body>\n"); err != nil {
+		return err
+	}
+//line new_investigation.ego:25
 	if _, err := fmt.Fprintf(w, "</html>\n"); err != nil {
 		return err
 	}

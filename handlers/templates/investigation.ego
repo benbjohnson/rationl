@@ -1,0 +1,33 @@
+<%! func Investigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error %>
+
+<%% import "github.com/benbjohnson/rationl" %%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <% head(w) %>
+
+  <body class="investigations">
+    <div class="container">
+      <div class="page-header">
+        <h3>Investigation</h3>
+      </div>
+
+      <% if i == nil { %>
+        <div class="row">
+          <div class="col-lg-12">
+            <p>
+              Investigation could not be found.
+            </p>
+          </div>
+        </div>
+      <% } else { %>
+        <form role="form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <label for="name"><%= i.GetName() %></label>
+          </div>
+        </form>
+      <% } %>
+    </div> <!-- /container -->
+  </body>
+</html>

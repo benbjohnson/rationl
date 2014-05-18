@@ -19,6 +19,18 @@ func (u *User) SetAccessToken(v string) {
 	u.AccessToken = proto.String(v)
 }
 
+func (i *Investigation) SetID(v string) {
+	i.ID = proto.String(v)
+}
+
+func (i *Investigation) SetUserID(v int64) {
+	i.UserID = proto.Int64(v)
+}
+
+func (i *Investigation) SetName(v string) {
+	i.Name = proto.String(v)
+}
+
 func warn(v ...interface{}) {
 	fmt.Fprintln(os.Stderr, v...)
 }

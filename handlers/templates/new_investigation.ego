@@ -1,0 +1,25 @@
+<%! func NewInvestigation(w io.Writer, session *rationl.Session, i *rationl.Investigation) error %>
+
+<%% import "github.com/benbjohnson/rationl" %%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <% head(w) %>
+
+  <body class="investigations">
+    <div class="container">
+      <div class="page-header">
+        <h3>New Investigation</h3>
+      </div>
+
+      <form role="form" action="/investigations" method="POST">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" autofocus value="<%= i.GetName() %>"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Investigation</button>
+        <a class="btn btn-default" href="/investigations">Cancel</a>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>
