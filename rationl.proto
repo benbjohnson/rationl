@@ -10,14 +10,14 @@ option (gogoproto.unmarshaler_all) = true;
 
 message User {
 	required int64 ID=1;
-	required string Email=3;
-	required string AccessToken=4;
+	required string Email=2;
+	required string AccessToken=3;
 }
 
 message Investigation {
 	required string ID=1;
 	required int64 UserID=2;
-	required string Name=4;
+	required string Name=3;
 }
 
 message Experiment {

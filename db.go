@@ -16,6 +16,14 @@ import (
 	"github.com/nu7hatch/gouuid"
 )
 
+var (
+	usrbkt    = []byte("User")
+	usrinvbkt = []byte("User.[]Investigation")
+	invbkt    = []byte("Investigation")
+	invexpbkt = []byte("Investigation.[]Experiment")
+	expbkt    = []byte("Experiment")
+)
+
 // DB represents the primary data storage.
 type DB struct {
 	*bolt.DB
@@ -34,11 +42,11 @@ func Open(path string, mode os.FileMode) (*DB, error) {
 	// Initialize schema.
 	err = db.Update(func(tx *Tx) error {
 		var meta, _ = tx.CreateBucketIfNotExists([]byte("Meta"))
-		tx.CreateBucketIfNotExists([]byte("User"))
-		tx.CreateBucketIfNotExists([]byte("User.[]Investigation"))
-		tx.CreateBucketIfNotExists([]byte("Investigation"))
-		tx.CreateBucketIfNotExists([]byte("Investigation.[]Experiment"))
-		tx.CreateBucketIfNotExists([]byte("Experiment"))
+		tx.CreateBucketIfNotExists(usrbkt)
+		tx.CreateBucketIfNotExists(usrinvbkt)
+		tx.CreateBucketIfNotExists(invbkt)
+		tx.CreateBucketIfNotExists(invexpbkt)
+		tx.CreateBucketIfNotExists(expbkt)
 
 		// Initialize secure cookie store.
 		var secret = meta.Get([]byte("secret"))
@@ -87,20 +95,16 @@ func (tx *Tx) GitHubClient(token string) *github.Client {
 	return github.NewClient(t.Client())
 }
 
-func (tx *Tx) userBucket() *bolt.Bucket          { return tx.Bucket([]byte("User")) }
-func (tx *Tx) investigationBucket() *bolt.Bucket { return tx.Bucket([]byte("Investigation")) }
-func (tx *Tx) experimentBucket() *bolt.Bucket    { return tx.Bucket([]byte("Experiment")) }
-
 // User retrieves an user from the database by ID.
 func (tx *Tx) User(id int64) *User {
-	v := tx.userBucket().Get(i64tob(id))
+	v := tx.Bucket(usrbkt).Get(i64tob(id))
 	if v == nil {
 		return nil
 	}
 
 	var u = &User{}
 	if err := u.Unmarshal(v); err != nil {
-		log.Println("user: unmarshal:", err)
+		log.Println("usr: unmarshal:", err)
 		return nil
 	}
 	return u
@@ -115,7 +119,7 @@ func (tx *Tx) SaveUser(u *User) error {
 	if err != nil {
 		return fmt.Errorf("marshal: %s", err)
 	}
-	return tx.userBucket().Put(i64tob(u.GetID()), b)
+	return tx.Bucket(usrbkt).Put(i64tob(u.GetID()), b)
 }
 
 // FindOrCreateUserByAccessToken retrieves or creates a new user based on an
@@ -132,10 +136,10 @@ func (tx *Tx) FindOrCreateUserByAccessToken(token string) (*User, error) {
 	var u *User
 	if u = tx.User(int64(*user.ID)); u == nil {
 		u = &User{}
-		u.SetID(int64(*user.ID))
+		u.ID = proto.Int64(int64(*user.ID))
 	}
-	u.SetEmail(*user.Email)
-	u.SetAccessToken(token)
+	u.Email = proto.String(*user.Email)
+	u.AccessToken = proto.String(token)
 
 	// Save updated record.
 	if err := tx.SaveUser(u); err != nil {
@@ -146,7 +150,7 @@ func (tx *Tx) FindOrCreateUserByAccessToken(token string) (*User, error) {
 
 // Investigation retrieves an investigation from the database by ID.
 func (tx *Tx) Investigation(id string) *Investigation {
-	v := tx.investigationBucket().Get([]byte(id))
+	v := tx.Bucket(invbkt).Get([]byte(id))
 	if v == nil {
 		return nil
 	}
@@ -161,7 +165,7 @@ func (tx *Tx) Investigation(id string) *Investigation {
 
 // InvestigationsByUserID retrieves a list of investigations by user id.
 func (tx *Tx) InvestigationsByUserID(id int64) []*Investigation {
-	b := tx.Bucket([]byte("User.[]Investigation")).Bucket(i64tob(id))
+	b := tx.Bucket(usrinvbkt).Bucket(i64tob(id))
 	if b == nil {
 		return nil
 	}
@@ -189,15 +193,22 @@ func (tx *Tx) CreateInvestigation(i *Investigation) error {
 	i.ID = proto.String(id.String())
 
 	// Save investigation
-	b, err := i.Marshal()
+	v, err := i.Marshal()
 	if err != nil {
 		return fmt.Errorf("marshal: %s", err)
 	}
-	if err := tx.investigationBucket().Put([]byte(i.GetID()), b); err != nil {
-		return fmt.Errorf("put: %s", err)
+	if err := tx.Bucket(invbkt).Put([]byte(i.GetID()), v); err != nil {
+		return fmt.Errorf("inv: put: %s", err)
 	}
 
-	// TODO(benbjohnson): Add to index.
+	// Add to index.
+	b, err := tx.Bucket(usrinvbkt).CreateBucketIfNotExists(i64tob(i.GetUserID()))
+	if err != nil {
+		return fmt.Errorf("usrinv: create: %s", err)
+	}
+	if err := b.Put([]byte(i.GetID()), []byte{}); err != nil {
+		return fmt.Errorf("usrinv: put: %s", err)
+	}
 
 	return nil
 }
